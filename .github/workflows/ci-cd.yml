@@ -35,13 +35,12 @@ jobs:
           script: |
             cd ${{ secrets.DEPLOY_CONSUMER_PATH }}
 
-            echo "📦 Building NEW consumer JAR..."
+            echo "📦 Building new JAR..."
             mvn clean package -DskipTests
-
-            echo "🐳 Rebuilding ONLY consumer-app service..."
-            docker compose build app
-
-            echo "🔄 Restarting ONLY consumer-app container..."
-            docker compose up -d app
-
-            echo "🎉 Consumer Deployment Completed Successfully!"
+            echo "🐳 Rebuilding Docker images..."
+            docker compose build
+            echo "🔄 Starting ALL services..."
+            docker compose up -d
+            echo "🧹 Removing unused images..."
+            docker image prune -f
+            echo "🎉 Backend Deployment Completed Successfully!"
